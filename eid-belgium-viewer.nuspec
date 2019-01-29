@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>eid-belgium-viewer</id>
-    <title>eid-</title>
+    <title>Belgium e-ID viewer</title>
     <version>4.1.2</version>
     <authors>ZETES S.A., Fedict</authors>
     <owners>chocolatey</owners>
