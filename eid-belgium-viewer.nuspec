@@ -11,14 +11,14 @@
     <description>Middleware for the Belgian electronic identity card></description>
     <projectUrl>https://eid.belgium.be/en</projectUrl>
     <projectSourceUrl>https://github.com/Fedict/eid-mw</projectSourceUrl>
-    <packageSourceUrl>https://github.com/chocolatey/chocolatey-coreteampackages/tree/master/automatic/eid-belgium-viewer</packageSourceUrl>
+    <packageSourceUrl>https://github.com/wget/chocolatey-package-eid-belgium-viewer</packageSourceUrl>
     <docsUrl>https://github.com/Fedict/eid-mw/wiki</docsUrl>
     <bugTrackerUrl>https://github.com/Fedict/eid-mw/issues</bugTrackerUrl>
     <tags>belgium eid middleware viewer identity card admin</tags>
     <licenseUrl>https://github.com/Fedict/eid-mw/blob/master/COPYING</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <copyright>Copyright 2009-2018 ZETES S.A. and Fedict</copyright>
-    <iconUrl>"https://cdn.rawgit.com/chocolatey/chocolatey-coreteampackages/5f317458cb64cb6465bb90336989d405be46066a/icons/eid-belgium.png</iconUrl>
+    <copyright>Copyright 2009-2019 ZETES S.A. and Fedict</copyright>
+    <iconUrl>https://cdn.rawgit.com/wget/chocolatey-package-eid-belgium-viewer/957a5aa01ca31330525394949b934f83e25d7ecc/icon.png</iconUrl>
     <releaseNotes>https://eid.belgium.be/sites/default/files/content/pdf/rn446.pdf</releaseNotes>
   </metadata>
   <files>
