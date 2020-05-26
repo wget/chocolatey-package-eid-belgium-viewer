@@ -38,7 +38,7 @@ function global:au_GetLatest {
   $version = $viewerUrl.split('_')[1].replace(".msi","")
   
   # Determine release notes URL
-  $tags = Invoke-WebRequest 'https://api.github.com/repos/fedict/eid-mw/tags' | ConvertFrom-Json
+  $tags = Invoke-WebRequest -Uri 'https://api.github.com/repos/fedict/eid-mw/tags' -UseBasicParsing | ConvertFrom-Json
   foreach ($tag in $tags) {
     $urlReleaseNotes = "https://eid.belgium.be/sites/default/files/content/pdf/rn$($tag.Name -Replace '[a-zA-Z._]*','').pdf"
     try {
