@@ -22,14 +22,11 @@ function global:au_SearchReplace {
 
 function global:au_GetLatest {
 
-  $url = "https://eid.belgium.be/en/colorbox/nl/download/41/license"
+  $url = "https://eid.belgium.be/en/download/41/license"
   $content = Invoke-WebRequest -Uri $url -UseBasicParsing
-  $parsedContent = $content | ConvertFrom-Json
-  $parser = New-Object -Com "HTMLFile"
-  $parser.IHTMLDocument2_write([string]$parsedContent[1])
-  foreach ($i in $parser.getElementsByTagName("a") ) {
-    if ($i.href.endswith("msi")) {
-      $viewerUrl = $i.href.trim()
+  foreach ($i in $content.Links.href) {
+    if ($i.endswith("msi")) {
+      $viewerUrl = $i.trim()
       break;
     }
   }
