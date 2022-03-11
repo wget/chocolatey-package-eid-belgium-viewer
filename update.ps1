@@ -1,7 +1,10 @@
 import-module au
 
 function global:au_BeforeUpdate {
-    Get-RemoteFiles -Purge -NoSuffix 
+    # FileNameBase is made to override the name the gov specified with spaces.
+    # We don't have to respecify the extension otherwise it will be added
+    # twice as AU's Get-RemoteFiles function is already taking care of this.
+    Get-RemoteFiles -Purge -NoSuffix -FileNameBase "eid-belgium-viewer"
 }
 
 function global:au_SearchReplace {
@@ -49,6 +52,7 @@ function global:au_GetLatest {
   $64bitVersion = (([uri]$64bitUrl).Segments[-1].Split('_')[-1].Trim('.msi') -Split '%20')[-1]
 
   return @{
+    URL32 = $64bitUrl
     URL64 = $64bitUrl
     Version = $64bitVersion
     ReleaseNotes = $latestReleaseNoteUrl
