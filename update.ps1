@@ -19,32 +19,6 @@ function global:au_SearchReplace {
     }
   }
 }
-function Get-VersionUrl($tags, $versionPatterns, $baseURLs, $filenamePatterns, $filenameArchPatterns) {
-  foreach ($tag in $tags) {
-    foreach ($versionPattern in $versionPatterns) {
-      $version = $tag.Name -Replace $versionPattern
-      foreach ($baseUrl in $baseUrls) {
-        foreach ($filename in $filenamePatterns) {
-          foreach ($archPattern in $filenameArchPatterns) {
-            try {
-              $baseUrl = $($baseUrl -Replace "\[VERSION\]","$version" -Replace "\[ARCH\]","$archPattern")
-              $url = $($filename -Replace "\[VERSION\]","$version" -Replace "\[ARCH\]","$archPattern")
-              $url = "$($baseUrl)$($url)"
-              Write-Host "Checking: $url"
-              Invoke-WebRequest -Uri $url -UseBasicParsing -DisableKeepAlive -Method HEAD | Out-Null
-              $versionUrl = @{}
-              $versionUrl.version = $version
-              $versionUrl.url = $url
-              return $versionUrl
-            } catch [Net.WebException] {
-            }
-          }
-        }
-      }
-    }
-  }
-  return $null
-}
 
 function global:au_GetLatest {
 
