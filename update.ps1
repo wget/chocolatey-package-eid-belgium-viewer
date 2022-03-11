@@ -48,42 +48,36 @@ function Get-VersionUrl($tags, $versionPatterns, $baseURLs, $filenamePatterns, $
 
 function global:au_GetLatest {
 
-  $tagsUrl = "https://api.github.com/repos/fedict/eid-mw/tags"
-  $releaseNotesFilenamePatterns = @(
-    "rn[VERSION].pdf",
-    "RN[version].pdf"
-  )
-  $releaseNotesVersionPatterns = @(
-    '[^0-9.]',
-    '[^0-9]'
-  )
-  $errorMessage = "[PREFIX]This shouldn't happen. Upstream has likely changed their URLs, manual intervention required."
+  try {
+    $64bitUrl = "https://eid.belgium.be/en/download/41/license"
+    $64bitUrl = (Invoke-WebRequest $64bitUrl -UseBasicParsing).Links | Select -ExpandProperty href -Unique | Where-Object { $_ -like '*msi*' }
 
-  $url = "https://eid.belgium.be/en/download/41/license"
-  $content = Invoke-WebRequest -Uri $url -UseBasicParsing
-  foreach ($i in $content.Links.href) {
-    if ($i.endswith("msi")) {
-      [System.Uri]$viewerUrl = $i.trim()
-      break;
+    $releaseNotesUrl = "https://eid.belgium.be/en/future-versions-eid-software-and-eid-viewer"
+    $releaseNotesUrls = (Invoke-WebRequest $releaseNotesUrl -UseBasicParsing).Links | Select -ExpandProperty href | Where-Object { $_ -like '*pdf*' }
+
+    # We may get several PDF with release notes. Just ask the server which one
+    # is the latest by checking the Last-Modified HTTP header.
+    $latestReleaseNote = ""
+    $latestReleaseNoteUrl = ""
+    foreach ($url in $releaseNotesUrls) {
+      $url = "https://eid.belgium.be" + $url
+      $result = Invoke-WebRequest -Method HEAD -Uri $url -UseBasicParsing
+      $releaseNoteDate = Get-Date -Date $result.Headers."Last-Modified" -UFormat %s
+      if ($releaseNoteDate -ge $latestReleaseNote) {
+        $latestReleaseNote = $releaseNoteDate
+        $latestReleaseNoteUrl = $url
+      }
     }
+  } catch {
+    throw "Checking the URLs has failed. This shouldn't happen. Upstream has likely changed their URLs, manual intervention required."
   }
-  if (!$viewerUrl) {
-    throw $errorMessage -Replace "\[PREFIX\]","The viewer URL was not found. "
-  }
-  
-  $version = Split-Path $viewerUrl.LocalPath -leaf
-  $version = ($version -Replace '[^0-9.]').trim('.')
-  
-  # Determine release notes URL
-  $versionUrlReleaseNotes = Get-VersionUrl $tags $releaseNotesVersionPatterns $releaseNotesBaseUrls $releaseNotesFilenamePatterns @{}
-  if (!$versionUrlReleaseNotes) {
-    throw $errorMessage -Replace "\[PREFIX\]","The URL to the release notes was not found. "
-  }
+
+  $64bitVersion = (([uri]$64bitUrl).Segments[-1].Split('_')[-1].Trim('.msi') -Split '%20')[-1]
 
   return @{
-    URL32 = $viewerUrl.AbsoluteUri
-    Version = $version
-    ReleaseNotes = $versionUrlReleaseNotes.url
+    URL64 = $64bitUrl
+    Version = $64bitVersion
+    ReleaseNotes = $latestReleaseNoteUrl
   }
 }
 
